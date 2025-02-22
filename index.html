@@ -21,9 +21,11 @@
       .music-player {
         width: 100%;
         max-width: 24rem;
-        background: #ffffff;
+        background: url('https://static.vecteezy.com/system/resources/previews/004/964/502/non_2x/cute-strawberry-cartoon-seamless-pattern-background-design-for-kids-decorating-wallpaper-wrapping-paper-fabric-backdrop-free-vector.jpg');
+        background-size: cover;
+        background-position: center;
         border-radius: 1.5rem;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         overflow: hidden;
         padding: 1rem;
       }
@@ -44,7 +46,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        position: relative;
       }
 
       .carousel-item img {
@@ -54,31 +55,12 @@
         border-radius: 1rem;
       }
 
-      .carousel-item::before,
-      .carousel-item::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        width: 6rem;
-        height: 90%;
-        transform: translateY(-50%);
-        z-index: 2;
-        pointer-events: none;
-      }
-
-      .carousel-item::before {
-        left: -6rem;
-        background: linear-gradient(to right, rgba(240, 240, 240, 1), rgba(240, 240, 240, 0));
-      }
-
-      .carousel-item::after {
-        right: -6rem;
-        background: linear-gradient(to left, rgba(240, 240, 240, 1), rgba(240, 240, 240, 0));
-      }
-
       .info {
         text-align: center;
         margin-top: 1rem;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 0.5rem;
+        border-radius: 0.75rem;
       }
 
       .info h2 {
@@ -89,28 +71,45 @@
       .info p {
         color: #777;
         font-size: 0.9rem;
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
       }
 
       .controls {
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
         gap: 1rem;
+        margin-top: 1rem;
       }
 
       .controls button {
-        background-color: #4f46e5;
-        color: white;
+        background-color: #ffe4f0;
         border: none;
-        padding: 0.6rem 1rem;
-        border-radius: 9999px;
+        padding: 0.6rem 0.9rem;
+        border-radius: 1.2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         cursor: pointer;
-        transition: background-color 0.3s ease;
+        transition: transform 0.2s ease, background-color 0.3s ease;
+        width: 5rem;
       }
 
       .controls button:hover {
-        background-color: #4338ca;
+        transform: scale(1.1);
+        background-color: #ffcae1;
+      }
+
+      .controls img {
+        width: 2.2rem;
+        height: 2.2rem;
+      }
+
+      .controls span {
+        font-size: 0.8rem;
+        color: #ff69b4;
+        margin-top: 0.4rem;
+        font-weight: 600;
       }
 
       audio {
@@ -119,9 +118,17 @@
       }
 
       @media (max-width: 640px) {
-        .carousel-item::before,
-        .carousel-item::after {
-          display: none;
+        .controls button {
+          width: 4.5rem;
+        }
+
+        .controls img {
+          width: 2rem;
+          height: 2rem;
+        }
+
+        .controls span {
+          font-size: 0.75rem;
         }
       }
     </style>
@@ -149,10 +156,19 @@
         <audio id="audio" controls></audio>
       </div>
 
-      <div class="controls mt-4">
-        <button id="prev">⏮️ Prev</button>
-        <button id="play">▶️ Play</button>
-        <button id="next">⏭️ Next</button>
+      <div class="controls">
+        <button id="prev">
+          <img src="https://image.similarpng.com/file/similarpng/original-picture/2020/06/Strawberry-vector-transparent-PNG.png" alt="Previous" />
+          <span>Previous</span>
+        </button>
+        <button id="play">
+          <img src="https://image.similarpng.com/file/similarpng/original-picture/2020/06/Strawberry-vector-transparent-PNG.png" alt="Play/Pause" />
+          <span>Play/Pause</span>
+        </button>
+        <button id="next">
+          <img src="https://image.similarpng.com/file/similarpng/original-picture/2020/06/Strawberry-vector-transparent-PNG.png" alt="Next" />
+          <span>Next</span>
+        </button>
       </div>
     </div>
 
@@ -205,10 +221,8 @@
       function playPause() {
         if (isPlaying) {
           audio.pause();
-          playButton.textContent = "▶️ Play";
         } else {
           audio.play();
-          playButton.textContent = "⏸️ Pause";
         }
         isPlaying = !isPlaying;
       }
@@ -217,7 +231,6 @@
         currentTrack = (currentTrack + 1) % playlist.length;
         loadTrack(currentTrack);
         audio.play();
-        playButton.textContent = "⏸️ Pause";
         isPlaying = true;
       }
 
@@ -225,7 +238,6 @@
         currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
         loadTrack(currentTrack);
         audio.play();
-        playButton.textContent = "⏸️ Pause";
         isPlaying = true;
       }
 
@@ -238,3 +250,4 @@
     </script>
   </body>
 </html>
+
