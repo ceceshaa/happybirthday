@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Happy Sweet Seventeen Keisha ku tercinta</title>
+    <title>HBD Bang Koding - Pemutar Musik Modern</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap');
@@ -52,32 +52,13 @@
         position: absolute;
         top: 0;
         left: 0;
-        transition: transform 0.6s ease, opacity 0.4s ease;
-      }
-
-      .slide.enter-left {
-        transform: translateX(-100%);
         opacity: 0;
-      }
-
-      .slide.enter-right {
-        transform: translateX(100%);
-        opacity: 0;
+        transform: translateX(0);
+        transition: opacity 0.3s ease;
       }
 
       .slide.active {
-        transform: translateX(0);
         opacity: 1;
-      }
-
-      .slide.exit-left {
-        transform: translateX(-100%);
-        opacity: 0;
-      }
-
-      .slide.exit-right {
-        transform: translateX(100%);
-        opacity: 0;
       }
 
       .title {
@@ -172,10 +153,7 @@
 
         <div class="info">
           <p id="artist">Billie Eilish</p>
-          <audio id="audio" controls autoplay>
-            <source id="audio-source" src="https://audio.jukehost.co.uk/8rexAflpDv6xxB0qplbryzOi7epKGwwA" type="audio/mpeg" />
-            Your browser does not support the audio element.
-          </audio>
+          <audio id="audio" controls muted></audio>
         </div>
 
         <div class="controls">
@@ -212,10 +190,9 @@
       ];
 
       let currentTrack = 0;
-      let isPlaying = true; // Start playing by default
+      let isPlaying = true;
 
       const audio = document.getElementById("audio");
-      const audioSource = document.getElementById("audio-source");
       const title = document.getElementById("song-title");
       const artist = document.getElementById("artist");
       const playButton = document.getElementById("play");
@@ -223,31 +200,29 @@
       const prevButton = document.getElementById("prev");
       const imageContainer = document.getElementById("image-container");
 
-      function loadTrack(index, direction = "right") {
+      function loadTrack(index) {
         const track = playlist[index];
 
-        audioSource.src = track.src;
         title.textContent = track.title;
         artist.textContent = track.artist;
-        audio.load();
-
+        
+        audio.src = track.src;
         if (isPlaying) {
-          audio.play();
+          audio.play().catch(() => {}); // Handle autoplay restrictions gracefully
         }
 
         const newImage = document.createElement("div");
-        newImage.className = `slide enter-${direction}`;
+        newImage.className = "slide";
         newImage.style.backgroundImage = `url('${track.mainImage}')`;
         imageContainer.appendChild(newImage);
 
         requestAnimationFrame(() => {
           newImage.classList.add("active");
-          newImage.classList.remove(`enter-${direction}`);
 
           const oldImage = imageContainer.querySelector(".slide.active:not(:last-child)");
           if (oldImage) {
-            oldImage.classList.add(direction === "right" ? "exit-left" : "exit-right");
-            setTimeout(() => oldImage.remove(), 500);
+            oldImage.classList.remove("active");
+            setTimeout(() => oldImage.remove(), 300);
           }
         });
       }
@@ -259,12 +234,12 @@
 
       function nextTrack() {
         currentTrack = (currentTrack + 1) % playlist.length;
-        loadTrack(currentTrack, "right");
+        loadTrack(currentTrack);
       }
 
       function prevTrack() {
         currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
-        loadTrack(currentTrack, "left");
+        loadTrack(currentTrack);
       }
 
       playButton.addEventListener("click", playPause);
@@ -272,7 +247,13 @@
       prevButton.addEventListener("click", prevTrack);
       audio.addEventListener("ended", nextTrack);
 
-      window.onload = () => loadTrack(currentTrack);
+      window.onload = () => {
+        loadTrack(currentTrack);
+        setTimeout(() => {
+          audio.muted = false; // Unmute after autoplay starts to comply with browser policies
+        }, 500);
+      };
     </script>
   </body>
 </html>
+
